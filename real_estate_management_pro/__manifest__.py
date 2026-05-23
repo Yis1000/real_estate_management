@@ -3,6 +3,7 @@
     'name': 'Real Estate Management',
     'version': '18.0.1.0.0',
     'category': 'Real Estate/Real Estate',
+    'images': ['static/description/banner.png'],
     'summary': 'Large-scale real estate suite: properties, contracts, '
                'collections, maintenance, renovations and analytics.',
     'description': """
@@ -58,4 +59,3 @@ End-to-end management of a real estate portfolio:
     'auto_install': False,
 }
 
-    'images': ['static/description/banner.png'],
