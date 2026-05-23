@@ -3,6 +3,7 @@
     'name': 'Real Estate Management',
     'version': '19.0.1.0.0',
     'category': 'Real Estate/Real Estate',
+    'live_test_url': 'https://youtu.be/8Gp2J6WrP1c',
     'images': ['static/description/banner.png'],
     'summary': 'Large-scale real estate suite: properties, contracts, '
                'collections, maintenance, renovations and analytics.',
