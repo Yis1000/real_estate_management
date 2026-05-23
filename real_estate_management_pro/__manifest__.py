@@ -57,3 +57,5 @@ End-to-end management of a real estate portfolio:
     'application': True,
     'auto_install': False,
 }
+
+    'images': ['static/description/banner.png'],
