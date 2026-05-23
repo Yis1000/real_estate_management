@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_contract" model="ir.actions.report">
+        <field name="name">Contract</field>
+        <field name="model">real.estate.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">real_estate_management.report_contract</field>
+        <field name="report_file">real_estate_management.report_contract</field>
+        <field name="binding_model_id" ref="model_real_estate_contract"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Contract - %s' % (object.name)</field>
+    </record>
+
+</odoo>

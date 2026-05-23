@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================ LIST ============================ -->
+    <record id="view_payment_list" model="ir.ui.view">
+        <field name="name">real.estate.payment.list</field>
+        <field name="model">real.estate.payment</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="state == 'overdue'"
+                  decoration-success="state == 'paid'"
+                  decoration-muted="state == 'cancelled'">
+                <field name="contract_id"/>
+                <field name="property_id"/>
+                <field name="tenant_id"/>
+                <field name="description" optional="show"/>
+                <field name="due_date"/>
+                <field name="amount" sum="Total"/>
+                <field name="payment_date" optional="show"/>
+                <field name="days_overdue"/>
+                <field name="state" widget="badge"
+                       decoration-danger="state == 'overdue'"
+                       decoration-success="state == 'paid'"/>
+                <field name="currency_id" column_invisible="1"/>
+                <button name="action_register_payment" type="object"
+                        string="Register Payment" icon="fa-check"
+                        invisible="state in ('paid', 'cancelled')"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================ FORM ============================ -->
+    <record id="view_payment_form" model="ir.ui.view">
+        <field name="name">real.estate.payment.form</field>
+        <field name="model">real.estate.payment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_register_payment" type="object"
+                            string="Register Payment" class="btn-primary"
+                            invisible="state in ('paid', 'cancelled')"/>
+                    <button name="action_reset_pending" type="object"
+                            string="Reset to Pending"
+                            invisible="state != 'paid'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="contract_id"/>
+                            <field name="property_id" readonly="1"/>
+                            <field name="tenant_id" readonly="1"/>
+                            <field name="description"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount"/>
+                            <field name="due_date"/>
+                            <field name="payment_date"/>
+                            <field name="days_overdue"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- =========================== SEARCH =========================== -->
+    <record id="view_payment_search" model="ir.ui.view">
+        <field name="name">real.estate.payment.search</field>
+        <field name="model">real.estate.payment</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="contract_id"/>
+                <field name="property_id"/>
+                <field name="tenant_id"/>
+                <filter name="pending" string="Pending"
+                        domain="[('state', '=', 'pending')]"/>
+                <filter name="overdue" string="Overdue"
+                        domain="[('state', '=', 'overdue')]"/>
+                <filter name="paid" string="Paid"
+                        domain="[('state', '=', 'paid')]"/>
+                <separator/>
+                <filter name="due_date" string="Due Date" date="due_date"/>
+                <group string="Group By">
+                    <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_property" string="Property"
+                            context="{'group_by': 'property_id'}"/>
+                    <filter name="group_tenant" string="Tenant"
+                            context="{'group_by': 'tenant_id'}"/>
+                    <filter name="group_due" string="Due Month"
+                            context="{'group_by': 'due_date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ======================= GRAPH & PIVOT ======================== -->
+    <record id="view_payment_graph" model="ir.ui.view">
+        <field name="name">real.estate.payment.graph</field>
+        <field name="model">real.estate.payment</field>
+        <field name="arch" type="xml">
+            <graph string="Collections" type="bar">
+                <field name="due_date" interval="month"/>
+                <field name="state"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_payment_pivot" model="ir.ui.view">
+        <field name="name">real.estate.payment.pivot</field>
+        <field name="model">real.estate.payment</field>
+        <field name="arch" type="xml">
+            <pivot string="Collections">
+                <field name="property_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- =========================== ACTIONS ========================== -->
+    <record id="action_payment" model="ir.actions.act_window">
+        <field name="name">Collections</field>
+        <field name="res_model">real.estate.payment</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="search_view_id" ref="view_payment_search"/>
+    </record>
+
+    <record id="action_payment_overdue" model="ir.actions.act_window">
+        <field name="name">Overdue Collections</field>
+        <field name="res_model">real.estate.payment</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="domain">[('state', '=', 'overdue')]</field>
+        <field name="search_view_id" ref="view_payment_search"/>
+    </record>
+
+</odoo>
