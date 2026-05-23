@@ -139,7 +139,7 @@ class RealEstateDashboard(models.Model):
             'res_id': rec.id,
             'view_mode': 'form',
             'view_id': self.env.ref(
-                'real_estate_management.view_dashboard_form').id,
+                'real_estate_management_pro.view_dashboard_form').id,
             'target': 'current',
         }
 

@@ -4,7 +4,7 @@
     <!-- ============================ ROOT ============================ -->
     <menuitem id="menu_real_estate_root"
               name="Real Estate"
-              web_icon="real_estate_management,static/description/icon.png"
+              web_icon="real_estate_management_pro,static/description/icon.png"
               sequence="20"
               groups="group_real_estate_user"/>
 
