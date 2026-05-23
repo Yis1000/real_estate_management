@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Real Estate Management',
-    'version': '19.0.1.0.0',
+    'version': '16.0.1.0.0',
     'category': 'Real Estate/Real Estate',
     'live_test_url': 'https://youtu.be/8Gp2J6WrP1c',
     'images': ['static/description/banner.png'],
