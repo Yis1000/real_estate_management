@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ====================== RENOVATION PROJECT ===================== -->
+    <record id="view_renovation_list" model="ir.ui.view">
+        <field name="name">real.estate.renovation.list</field>
+        <field name="model">real.estate.renovation</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state in ('done', 'cancelled')">
+                <field name="name"/>
+                <field name="property_id"/>
+                <field name="manager_id"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="budget" sum="Budget"/>
+                <field name="actual_cost" sum="Actual"/>
+                <field name="budget_variance" sum="Variance"
+                       decoration-danger="budget_variance &lt; 0"/>
+                <field name="progress" widget="progressbar"/>
+                <field name="state" widget="badge"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_renovation_form" model="ir.ui.view">
+        <field name="name">real.estate.renovation.form</field>
+        <field name="model">real.estate.renovation</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start" type="object" string="Start"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_done" type="object" string="Complete"
+                            class="btn-primary" invisible="state != 'in_progress'"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state in ('done', 'cancelled')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,in_progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_tasks" type="object"
+                                class="oe_stat_button" icon="fa-tasks">
+                            <field name="task_count" widget="statinfo" string="Tasks"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Full kitchen refurbishment"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="property_id"/>
+                            <field name="manager_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="budget"/>
+                            <field name="actual_cost"/>
+                            <field name="budget_variance"
+                                   decoration-danger="budget_variance &lt; 0"/>
+                            <field name="progress" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Tasks" name="tasks">
+                            <field name="task_ids">
+                                <list editable="bottom"
+                                      decoration-success="state == 'done'">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="task_type"/>
+                                    <field name="assigned_to_id"/>
+                                    <field name="deadline"/>
+                                    <field name="estimated_cost" sum="Estimated"/>
+                                    <field name="actual_cost" sum="Actual"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Scope" name="scope">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_renovation" model="ir.actions.act_window">
+        <field name="name">Renovations</field>
+        <field name="res_model">real.estate.renovation</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- ======================= RENOVATION TASK ======================= -->
+    <record id="view_renovation_task_kanban" model="ir.ui.view">
+        <field name="name">real.estate.renovation.task.kanban</field>
+        <field name="model">real.estate.renovation.task</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <templates>
+                    <t t-name="card">
+                        <strong class="o_kanban_record_title">
+                            <field name="name"/>
+                        </strong>
+                        <div><i class="fa fa-home me-1" title="Property"/><field name="property_id"/></div>
+                        <div class="text-muted"><field name="renovation_id"/></div>
+                        <div><field name="task_type"/></div>
+                        <footer>
+                            <field name="deadline"/>
+                            <field name="assigned_to_id" widget="many2one_avatar"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_renovation_task_list" model="ir.ui.view">
+        <field name="name">real.estate.renovation.task.list</field>
+        <field name="model">real.estate.renovation.task</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" decoration-success="state == 'done'">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="renovation_id"/>
+                <field name="property_id"/>
+                <field name="task_type"/>
+                <field name="assigned_to_id"/>
+                <field name="deadline"/>
+                <field name="estimated_cost" sum="Estimated"/>
+                <field name="actual_cost" sum="Actual"/>
+                <field name="state" widget="badge"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_renovation_task_form" model="ir.ui.view">
+        <field name="name">real.estate.renovation.task.form</field>
+        <field name="model">real.estate.renovation.task</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="renovation_id"/>
+                            <field name="property_id" readonly="1"/>
+                            <field name="task_type"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="assigned_to_id"/>
+                            <field name="deadline"/>
+                            <field name="estimated_cost"/>
+                            <field name="actual_cost"/>
+                        </group>
+                    </group>
+                    <field name="notes" placeholder="Notes..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_renovation_task" model="ir.actions.act_window">
+        <field name="name">Renovation Tasks</field>
+        <field name="res_model">real.estate.renovation.task</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+</odoo>

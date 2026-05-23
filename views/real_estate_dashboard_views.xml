@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!--  Dashboard form view                                          -->
+    <!--  Single read-only form rendered as a grid of KPI cards.       -->
+    <!--  Every card is a button calling a drill-down action.          -->
+    <!-- ============================================================ -->
+    <record id="view_dashboard_form" model="ir.ui.view">
+        <field name="name">real.estate.dashboard.form</field>
+        <field name="model">real.estate.dashboard</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false" delete="false" class="o_real_estate_dashboard">
+                <sheet>
+                    <field name="currency_id" invisible="1"/>
+
+                    <!-- Title -->
+                    <div class="oe_title mb-3">
+                        <h1 class="m-0">Real Estate Dashboard</h1>
+                        <div class="text-muted">Overview of your portfolio</div>
+                    </div>
+
+                    <!-- ============ TOP KPI ROW ============ -->
+                    <div class="row g-3 mb-3">
+                        <!-- PROPERTIES -->
+                        <div class="col-md-3 col-sm-6">
+                            <button name="action_open_properties" type="object"
+                                    class="btn p-0 w-100 text-start border-0">
+                                <div class="card text-white h-100 shadow-sm"
+                                     style="background:linear-gradient(135deg,#7c5ec9,#5b3fa6);border-radius:14px;">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-end">
+                                            <span class="badge bg-light text-dark text-uppercase">Portfolio</span>
+                                        </div>
+                                        <h2 class="display-5 fw-bold mt-2 mb-0">
+                                            <field name="property_count"/>
+                                        </h2>
+                                        <div class="text-uppercase fw-bold small">Properties</div>
+                                        <div class="mt-2 small opacity-75">View all →</div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <!-- AVAILABLE UNITS -->
+                        <div class="col-md-3 col-sm-6">
+                            <button name="action_open_available" type="object"
+                                    class="btn p-0 w-100 text-start border-0">
+                                <div class="card text-white h-100 shadow-sm"
+                                     style="background:linear-gradient(135deg,#e85a91,#c93f74);border-radius:14px;">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-end">
+                                            <span class="badge bg-light text-dark text-uppercase">Inventory</span>
+                                        </div>
+                                        <h2 class="display-5 fw-bold mt-2 mb-0">
+                                            <field name="available_count"/>
+                                        </h2>
+                                        <div class="text-uppercase fw-bold small">Available</div>
+                                        <div class="mt-2 small opacity-75">View all →</div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <!-- CONTRACTS -->
+                        <div class="col-md-3 col-sm-6">
+                            <button name="action_open_contracts" type="object"
+                                    class="btn p-0 w-100 text-start border-0">
+                                <div class="card text-white h-100 shadow-sm"
+                                     style="background:linear-gradient(135deg,#3b82f6,#1e4fb8);border-radius:14px;">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-end">
+                                            <span class="badge bg-light text-dark text-uppercase">All Types</span>
+                                        </div>
+                                        <h2 class="display-5 fw-bold mt-2 mb-0">
+                                            <field name="contract_count"/>
+                                        </h2>
+                                        <div class="text-uppercase fw-bold small">Contracts</div>
+                                        <div class="mt-2 small opacity-75">View all →</div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <!-- ACTIVE RATE -->
+                        <div class="col-md-3 col-sm-6">
+                            <button name="action_open_running_contracts" type="object"
+                                    class="btn p-0 w-100 text-start border-0">
+                                <div class="card text-white h-100 shadow-sm"
+                                     style="background:linear-gradient(135deg,#16a085,#0e6b58);border-radius:14px;">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-end">
+                                            <span class="badge bg-light text-dark text-uppercase">Live</span>
+                                        </div>
+                                        <h2 class="display-5 fw-bold mt-2 mb-0">
+                                            <field name="active_rate" widget="percentage"/>
+                                        </h2>
+                                        <div class="text-uppercase fw-bold small">Active Rate</div>
+                                        <div class="mt-2 small opacity-75">
+                                            <field name="active_contract_count"/> active contracts
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ============ DIRECTORY ROW ============ -->
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4 col-sm-12">
+                            <button name="action_open_tenants" type="object"
+                                    class="btn p-0 w-100 text-start border-0">
+                                <div class="card h-100 shadow-sm" style="border-radius:14px;">
+                                    <div class="card-body d-flex align-items-center">
+                                        <i class="fa fa-users fa-2x text-primary me-3" title="Tenants"/>
+                                        <div>
+                                            <div class="h3 mb-0 fw-bold">
+                                                <field name="tenant_count"/>
+                                            </div>
+                                            <div class="text-muted small">Active Tenants</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <button name="action_open_providers" type="object"
+                                    class="btn p-0 w-100 text-start border-0">
+                                <div class="card h-100 shadow-sm" style="border-radius:14px;">
+                                    <div class="card-body d-flex align-items-center">
+                                        <i class="fa fa-wrench fa-2x text-warning me-3" title="Providers"/>
+                                        <div>
+                                            <div class="h3 mb-0 fw-bold">
+                                                <field name="provider_count"/>
+                                            </div>
+                                            <div class="text-muted small">Maintenance Providers</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <button name="action_open_owners" type="object"
+                                    class="btn p-0 w-100 text-start border-0">
+                                <div class="card h-100 shadow-sm" style="border-radius:14px;">
+                                    <div class="card-body d-flex align-items-center">
+                                        <i class="fa fa-user-circle-o fa-2x text-success me-3" title="Owners"/>
+                                        <div>
+                                            <div class="h3 mb-0 fw-bold">
+                                                <field name="owner_count"/>
+                                            </div>
+                                            <div class="text-muted small">Landlords / Owners</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ============ RENTAL + SALES ANALYTICS ============ -->
+                    <div class="row g-3 mb-3">
+                        <!-- Rental Analytics -->
+                        <div class="col-md-6">
+                            <div class="card shadow-sm h-100" style="border-radius:14px;">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">
+                                        <i class="fa fa-circle text-success me-2"/>Rental Analytics
+                                    </h5>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <button name="action_open_rent_draft" type="object"
+                                                    class="btn w-100 text-start"
+                                                    style="background:#f3f4f6;border-radius:10px;">
+                                                <div class="fw-bold h4 mb-0">
+                                                    <field name="rent_draft"/>
+                                                </div>
+                                                <div class="small text-muted">Draft</div>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button name="action_open_rent_running" type="object"
+                                                    class="btn w-100 text-start"
+                                                    style="background:#e6fffa;border-radius:10px;">
+                                                <div class="fw-bold h4 mb-0 text-success">
+                                                    <field name="rent_running"/>
+                                                </div>
+                                                <div class="small text-muted">Running</div>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button name="action_open_rent_expired" type="object"
+                                                    class="btn w-100 text-start"
+                                                    style="background:#fef2f2;border-radius:10px;">
+                                                <div class="fw-bold h4 mb-0 text-danger">
+                                                    <field name="rent_expired"/>
+                                                </div>
+                                                <div class="small text-muted">Expired</div>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button name="action_open_rent_done" type="object"
+                                                    class="btn w-100 text-start"
+                                                    style="background:#eef2ff;border-radius:10px;">
+                                                <div class="fw-bold h4 mb-0">
+                                                    <field name="rent_done"/>
+                                                </div>
+                                                <div class="small text-muted">Closed</div>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button name="action_open_rent_cancelled" type="object"
+                                                    class="btn w-100 text-start"
+                                                    style="background:#f3f4f6;border-radius:10px;">
+                                                <div class="fw-bold h4 mb-0 text-muted">
+                                                    <field name="rent_cancelled"/>
+                                                </div>
+                                                <div class="small text-muted">Cancelled</div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Sales Analytics -->
+                        <div class="col-md-6">
+                            <div class="card shadow-sm h-100" style="border-radius:14px;">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-3">
+                                        <i class="fa fa-circle text-warning me-2"/>Sales Analytics
+                                    </h5>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <button name="action_open_sale_draft" type="object"
+                                                    class="btn w-100 text-start"
+                                                    style="background:#f3f4f6;border-radius:10px;">
+                                                <div class="fw-bold h4 mb-0">
+                                                    <field name="sale_draft"/>
+                                                </div>
+                                                <div class="small text-muted">Draft</div>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button name="action_open_sale_running" type="object"
+                                                    class="btn w-100 text-start"
+                                                    style="background:#fff7ed;border-radius:10px;">
+                                                <div class="fw-bold h4 mb-0 text-warning">
+                                                    <field name="sale_running"/>
+                                                </div>
+                                                <div class="small text-muted">Running</div>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button name="action_open_sale_expired" type="object"
+                                                    class="btn w-100 text-start"
+                                                    style="background:#fef2f2;border-radius:10px;">
+                                                <div class="fw-bold h4 mb-0 text-danger">
+                                                    <field name="sale_expired"/>
+                                                </div>
+                                                <div class="small text-muted">Expired</div>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button name="action_open_sale_done" type="object"
+                                                    class="btn w-100 text-start"
+                                                    style="background:#1f2937;color:#fff;border-radius:10px;">
+                                                <div class="fw-bold h4 mb-0 text-white">
+                                                    <field name="sale_done"/>
+                                                </div>
+                                                <div class="small text-white-50">Completed</div>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button name="action_open_sale_cancelled" type="object"
+                                                    class="btn w-100 text-start"
+                                                    style="background:#f3f4f6;border-radius:10px;">
+                                                <div class="fw-bold h4 mb-0 text-muted">
+                                                    <field name="sale_cancelled"/>
+                                                </div>
+                                                <div class="small text-muted">Cancelled</div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============ COLLECTIONS + OPS ============ -->
+                    <div class="row g-3">
+                        <!-- Overdue -->
+                        <div class="col-md-6">
+                            <button name="action_open_overdue" type="object"
+                                    class="btn p-0 w-100 text-start border-0">
+                                <div class="card shadow-sm h-100"
+                                     style="background:linear-gradient(90deg,#fee2e2,#fff);border-left:4px solid #dc2626;border-radius:14px;">
+                                    <div class="card-body d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <div class="text-danger text-uppercase small fw-bold">
+                                                <i class="fa fa-exclamation-triangle me-1"/>Overdue Collections
+                                            </div>
+                                            <div class="h2 mb-0 fw-bold text-danger">
+                                                <field name="overdue_count"/>
+                                            </div>
+                                            <div class="small text-muted">
+                                                <field name="overdue_amount" widget="monetary"/>
+                                            </div>
+                                        </div>
+                                        <i class="fa fa-chevron-right text-muted" title="Open"/>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <!-- Pending -->
+                        <div class="col-md-6">
+                            <button name="action_open_pending" type="object"
+                                    class="btn p-0 w-100 text-start border-0">
+                                <div class="card shadow-sm h-100"
+                                     style="background:linear-gradient(90deg,#dbeafe,#fff);border-left:4px solid #2563eb;border-radius:14px;">
+                                    <div class="card-body d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <div class="text-primary text-uppercase small fw-bold">
+                                                <i class="fa fa-clock-o me-1"/>Pending Collections
+                                            </div>
+                                            <div class="h2 mb-0 fw-bold text-primary">
+                                                <field name="pending_count"/>
+                                            </div>
+                                            <div class="small text-muted">
+                                                <field name="pending_amount" widget="monetary"/>
+                                            </div>
+                                        </div>
+                                        <i class="fa fa-chevron-right text-muted" title="Open"/>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <!-- Tickets -->
+                        <div class="col-md-6">
+                            <button name="action_open_tickets" type="object"
+                                    class="btn p-0 w-100 text-start border-0">
+                                <div class="card shadow-sm h-100"
+                                     style="background:linear-gradient(90deg,#fef3c7,#fff);border-left:4px solid #d97706;border-radius:14px;">
+                                    <div class="card-body d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <div class="text-warning text-uppercase small fw-bold">
+                                                <i class="fa fa-wrench me-1"/>Open Tickets
+                                            </div>
+                                            <div class="h2 mb-0 fw-bold text-warning">
+                                                <field name="open_tickets"/>
+                                            </div>
+                                            <div class="small text-muted">Maintenance pending</div>
+                                        </div>
+                                        <i class="fa fa-chevron-right text-muted" title="Open"/>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <!-- Renovations -->
+                        <div class="col-md-6">
+                            <button name="action_open_renovations" type="object"
+                                    class="btn p-0 w-100 text-start border-0">
+                                <div class="card shadow-sm h-100"
+                                     style="background:linear-gradient(90deg,#ede9fe,#fff);border-left:4px solid #7c3aed;border-radius:14px;">
+                                    <div class="card-body d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <div class="text-uppercase small fw-bold" style="color:#7c3aed;">
+                                                <i class="fa fa-paint-brush me-1"/>Active Renovations
+                                            </div>
+                                            <div class="h2 mb-0 fw-bold" style="color:#7c3aed;">
+                                                <field name="active_renovations"/>
+                                            </div>
+                                            <div class="small text-muted">Projects in progress</div>
+                                        </div>
+                                        <i class="fa fa-chevron-right text-muted" title="Open"/>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <!-- Today's Visits -->
+                        <div class="col-md-6">
+                            <button name="action_open_visits_today" type="object"
+                                    class="btn p-0 w-100 text-start border-0">
+                                <div class="card shadow-sm h-100"
+                                     style="background:linear-gradient(90deg,#cffafe,#fff);border-left:4px solid #0891b2;border-radius:14px;">
+                                    <div class="card-body d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <div class="text-uppercase small fw-bold" style="color:#0891b2;">
+                                                <i class="fa fa-calendar me-1"/>Today's Visits
+                                            </div>
+                                            <div class="h2 mb-0 fw-bold" style="color:#0891b2;">
+                                                <field name="visits_today"/>
+                                            </div>
+                                            <div class="small text-muted">Property viewings</div>
+                                        </div>
+                                        <i class="fa fa-chevron-right text-muted" title="Open"/>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <!-- This Week's Visits -->
+                        <div class="col-md-6">
+                            <button name="action_open_visits_week" type="object"
+                                    class="btn p-0 w-100 text-start border-0">
+                                <div class="card shadow-sm h-100"
+                                     style="background:linear-gradient(90deg,#dcfce7,#fff);border-left:4px solid #16a34a;border-radius:14px;">
+                                    <div class="card-body d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <div class="text-uppercase small fw-bold" style="color:#16a34a;">
+                                                <i class="fa fa-calendar-check-o me-1"/>This Week's Visits
+                                            </div>
+                                            <div class="h2 mb-0 fw-bold" style="color:#16a34a;">
+                                                <field name="visits_week"/>
+                                            </div>
+                                            <div class="small text-muted">Next 7 days</div>
+                                        </div>
+                                        <i class="fa fa-chevron-right text-muted" title="Open"/>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  Server action: ensures the singleton exists and opens it    -->
+    <!-- ============================================================ -->
+    <record id="action_dashboard_main" model="ir.actions.server">
+        <field name="name">Open Real Estate Dashboard</field>
+        <field name="model_id" ref="model_real_estate_dashboard"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open_dashboard()</field>
+    </record>
+
+</odoo>

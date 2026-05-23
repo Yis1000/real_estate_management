@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =========================== KANBAN =========================== -->
+    <record id="view_maintenance_kanban" model="ir.ui.view">
+        <field name="name">real.estate.maintenance.kanban</field>
+        <field name="model">real.estate.maintenance</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="priority"/>
+                <templates>
+                    <t t-name="card">
+                        <strong class="o_kanban_record_title">
+                            <field name="title"/>
+                        </strong>
+                        <div class="text-muted"><field name="name"/></div>
+                        <div><i class="fa fa-home me-1" title="Property"/><field name="property_id"/></div>
+                        <div><field name="maintenance_type"/></div>
+                        <footer>
+                            <field name="priority" widget="priority"/>
+                            <field name="provider_id" widget="many2one_avatar"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ============================ LIST ============================ -->
+    <record id="view_maintenance_list" model="ir.ui.view">
+        <field name="name">real.estate.maintenance.list</field>
+        <field name="model">real.estate.maintenance</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="priority == '3'"
+                  decoration-muted="state in ('done', 'cancelled')">
+                <field name="name"/>
+                <field name="title"/>
+                <field name="property_id"/>
+                <field name="maintenance_type"/>
+                <field name="provider_id"/>
+                <field name="date_reported"/>
+                <field name="cost" sum="Total Cost"/>
+                <field name="priority" widget="priority"/>
+                <field name="state" widget="badge"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================ FORM ============================ -->
+    <record id="view_maintenance_form" model="ir.ui.view">
+        <field name="name">real.estate.maintenance.form</field>
+        <field name="model">real.estate.maintenance</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start" type="object" string="Start"
+                            class="btn-primary" invisible="state != 'new'"/>
+                    <button name="action_done" type="object" string="Mark Resolved"
+                            class="btn-primary" invisible="state != 'in_progress'"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state in ('done', 'cancelled')"/>
+                    <button name="action_reset" type="object" string="Reset"
+                            invisible="state not in ('done', 'cancelled')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="new,in_progress,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="title"/>
+                        <h1><field name="title" placeholder="e.g. Leaking kitchen tap"/></h1>
+                        <field name="name" readonly="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="property_id"/>
+                            <field name="maintenance_type"/>
+                            <field name="priority" widget="priority"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="reported_by_id"/>
+                            <field name="provider_id"/>
+                            <field name="date_reported"/>
+                            <field name="date_resolved"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="cost"/>
+                        </group>
+                    </group>
+                    <field name="description" placeholder="Describe the incident..."/>
+                    <notebook>
+                        <page string="Photos" name="photos">
+                            <field name="image_ids" mode="kanban">
+                                <kanban>
+                                    <field name="id"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <templates>
+                                        <t t-name="card" class="o_kanban_card">
+                                            <div class="o_squared_image">
+                                                <field name="image_medium" widget="image"
+                                                       options="{'size': [220, 220]}"/>
+                                            </div>
+                                            <div class="text-center mt-1">
+                                                <field name="name" placeholder="Caption"/>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <form>
+                                    <sheet>
+                                        <field name="image" widget="image"/>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="sequence"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- =========================== SEARCH =========================== -->
+    <record id="view_maintenance_search" model="ir.ui.view">
+        <field name="name">real.estate.maintenance.search</field>
+        <field name="model">real.estate.maintenance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="title"/>
+                <field name="property_id"/>
+                <field name="provider_id"/>
+                <filter name="open" string="Open"
+                        domain="[('state', 'in', ('new', 'in_progress'))]"/>
+                <filter name="urgent" string="Urgent"
+                        domain="[('priority', '=', '3')]"/>
+                <group>
+                    <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_property" string="Property"
+                            context="{'group_by': 'property_id'}"/>
+                    <filter name="group_type" string="Type"
+                            context="{'group_by': 'maintenance_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_maintenance" model="ir.actions.act_window">
+        <field name="name">Maintenance Tickets</field>
+        <field name="res_model">real.estate.maintenance</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_maintenance_search"/>
+    </record>
+
+</odoo>

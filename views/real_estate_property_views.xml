@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================ LIST ============================ -->
+    <record id="view_property_list" model="ir.ui.view">
+        <field name="name">real.estate.property.list</field>
+        <field name="model">real.estate.property</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'available'"
+                  decoration-warning="state == 'reserved'"
+                  decoration-muted="state in ('sold', 'unavailable')">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="property_type_id"/>
+                <field name="city"/>
+                <field name="owner_id"/>
+                <field name="operation_type"/>
+                <field name="rent_price" optional="show"/>
+                <field name="sale_price" optional="show"/>
+                <field name="net_balance" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'available'"
+                       decoration-warning="state == 'reserved'"/>
+                <field name="currency_id" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- =========================== KANBAN =========================== -->
+    <record id="view_property_kanban" model="ir.ui.view">
+        <field name="name">real.estate.property.kanban</field>
+        <field name="model">real.estate.property</field>
+        <field name="arch" type="xml">
+            <kanban class="o_real_estate_kanban">
+                <field name="state"/>
+                <field name="operation_type"/>
+                <field name="total_overdue"/>
+                <field name="bedrooms"/>
+                <field name="bathrooms"/>
+                <field name="living_area"/>
+                <field name="property_type_id"/>
+                <field name="city"/>
+                <field name="rent_price"/>
+                <field name="sale_price"/>
+                <field name="currency_id"/>
+                <field name="is_new"/>
+                <templates>
+                    <t t-name="card" class="p-0">
+                        <!-- Cover photo with badges + price overlay -->
+                        <div class="position-relative"
+                             t-attf-style="background-image:url(/web/image/real.estate.property/#{record.id.raw_value}/image); background-size:cover; background-position:center; height:200px; border-radius:8px 8px 0 0;">
+                            <div class="position-absolute top-0 start-0 m-2 d-flex gap-1">
+                                <span t-if="record.is_new.raw_value"
+                                      class="badge rounded-pill text-bg-success px-2"
+                                      style="background:#16a085 !important;">NEW</span>
+                                <span t-if="record.operation_type.raw_value == 'rent'"
+                                      class="badge rounded-pill text-bg-info px-2"
+                                      style="background:#3b82f6 !important;">FOR RENT</span>
+                                <span t-if="record.operation_type.raw_value == 'sale'"
+                                      class="badge rounded-pill px-2"
+                                      style="background:#16a085 !important;color:#fff;">FOR SALE</span>
+                                <span t-if="record.operation_type.raw_value == 'both'"
+                                      class="badge rounded-pill px-2"
+                                      style="background:#7c5ec9 !important;color:#fff;">RENT &amp; SALE</span>
+                            </div>
+                            <div class="position-absolute bottom-0 end-0 m-2 px-3 py-1 fw-bold"
+                                 style="background:rgba(0,0,0,0.65);color:#fff;border-radius:6px;">
+                                <field name="sale_price" widget="monetary"
+                                       t-if="record.operation_type.raw_value == 'sale'"/>
+                                <field name="rent_price" widget="monetary"
+                                       t-if="record.operation_type.raw_value == 'rent'"/>
+                                <t t-if="record.operation_type.raw_value == 'both'">
+                                    <field name="sale_price" widget="monetary"/>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="p-3">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <strong class="o_kanban_record_title">
+                                    <field name="name"/>
+                                </strong>
+                                <small class="text-muted ms-2">
+                                    <field name="code"/>
+                                </small>
+                            </div>
+
+                            <div class="text-muted small mt-1">
+                                <i class="fa fa-tag me-1" title="Type"/>
+                                <field name="property_type_id"/>
+                            </div>
+
+                            <div class="d-flex gap-3 mt-2 text-muted small">
+                                <span t-if="record.bedrooms.raw_value">
+                                    <i class="fa fa-bed me-1" title="Bedrooms"/>
+                                    <field name="bedrooms"/>
+                                </span>
+                                <span t-if="record.bathrooms.raw_value">
+                                    <i class="fa fa-bath me-1" title="Bathrooms"/>
+                                    <field name="bathrooms"/>
+                                </span>
+                                <span t-if="record.living_area.raw_value">
+                                    <i class="fa fa-arrows-alt me-1" title="Area"/>
+                                    <field name="living_area"/> m²
+                                </span>
+                            </div>
+
+                            <div class="mt-2">
+                                <field name="state" widget="label_selection"
+                                       options="{'classes': {'draft': 'secondary', 'available': 'success', 'reserved': 'warning', 'rented': 'info', 'sold': 'secondary', 'maintenance': 'danger', 'unavailable': 'dark'}}"/>
+                            </div>
+
+                            <div t-if="record.city.raw_value"
+                                 class="text-muted small mt-2 d-flex align-items-center">
+                                <i class="fa fa-map-marker me-1" title="Location"/>
+                                <field name="city"/>
+                            </div>
+
+                            <div t-if="record.total_overdue.raw_value &gt; 0"
+                                 class="text-danger fw-bold small mt-1">
+                                <i class="fa fa-exclamation-triangle me-1" title="Overdue"/>
+                                Overdue: <field name="total_overdue" widget="monetary"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ============================ FORM ============================ -->
+    <record id="view_property_form" model="ir.ui.view">
+        <field name="name">real.estate.property.form</field>
+        <field name="model">real.estate.property</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_set_available" type="object"
+                            string="Mark Available" class="btn-primary"
+                            invisible="state == 'available'"/>
+                    <button name="action_set_unavailable" type="object"
+                            string="Mark Unavailable"
+                            invisible="state == 'unavailable'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,available,reserved,rented,sold"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_contracts" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="contract_count" widget="statinfo" string="Contracts"/>
+                        </button>
+                        <button name="action_view_maintenance" type="object"
+                                class="oe_stat_button" icon="fa-wrench">
+                            <field name="maintenance_count" widget="statinfo" string="Tickets"/>
+                        </button>
+                        <button name="action_view_renovations" type="object"
+                                class="oe_stat_button" icon="fa-paint-brush">
+                            <field name="renovation_count" widget="statinfo" string="Renovations"/>
+                        </button>
+                        <button name="action_view_visits" type="object"
+                                class="oe_stat_button" icon="fa-calendar">
+                            <field name="visit_count" widget="statinfo" string="Visits"/>
+                        </button>
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Sunny Apartment Downtown"/></h1>
+                        <field name="code" readonly="1"/>
+                    </div>
+                    <group>
+                        <group string="Classification">
+                            <field name="property_type_id"/>
+                            <field name="operation_type"/>
+                            <field name="owner_id"/>
+                            <field name="current_tenant_id" readonly="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group string="Pricing">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="sale_price"/>
+                            <field name="rent_price"/>
+                            <field name="current_value"/>
+                            <field name="gross_yield" widget="percentage"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Photos" name="photos">
+                            <field name="image_ids" mode="kanban">
+                                <kanban>
+                                    <field name="id"/>
+                                    <field name="sequence" widget="handle"/>
+                                    <templates>
+                                        <t t-name="card" class="o_kanban_card o_real_estate_image_card">
+                                            <div class="o_squared_image">
+                                                <field name="image_medium" widget="image"
+                                                       options="{'size': [220, 220]}"/>
+                                            </div>
+                                            <div class="text-center mt-1">
+                                                <field name="name" placeholder="Caption"/>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <form>
+                                    <sheet>
+                                        <field name="image" widget="image"/>
+                                        <group>
+                                            <field name="name"/>
+                                            <field name="sequence"/>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Address &amp; Location" name="location">
+                            <group>
+                                <group string="Address">
+                                    <field name="street"/>
+                                    <field name="street2"/>
+                                    <field name="city"/>
+                                    <field name="zip"/>
+                                    <field name="state_id"/>
+                                    <field name="country_id"/>
+                                </group>
+                                <group string="Geolocation (Map View)">
+                                    <field name="latitude"/>
+                                    <field name="longitude"/>
+                                </group>
+                            </group>
+                            <group string="Legal / Registry">
+                                <group>
+                                    <field name="cadastral_reference"/>
+                                    <field name="property_registry_ref"/>
+                                </group>
+                                <group>
+                                    <field name="annexes"/>
+                                    <field name="has_energy_certificate"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Characteristics" name="characteristics">
+                            <group>
+                                <group>
+                                    <field name="bedrooms"/>
+                                    <field name="bathrooms"/>
+                                    <field name="living_area"/>
+                                    <field name="total_area"/>
+                                </group>
+                                <group>
+                                    <field name="floor"/>
+                                    <field name="year_built"/>
+                                    <field name="has_garage"/>
+                                    <field name="has_garden"/>
+                                    <field name="has_elevator"/>
+                                    <field name="is_furnished"/>
+                                </group>
+                            </group>
+                            <field name="description" placeholder="Full description..."/>
+                        </page>
+                        <page string="Financial Summary" name="financials">
+                            <group>
+                                <group string="Income">
+                                    <field name="total_collected"/>
+                                    <field name="total_pending"/>
+                                    <field name="total_overdue"
+                                           decoration-danger="total_overdue &gt; 0"/>
+                                </group>
+                                <group string="Costs &amp; Balance">
+                                    <field name="maintenance_cost"/>
+                                    <field name="renovation_cost"/>
+                                    <field name="net_balance"
+                                           decoration-bf="1"
+                                           decoration-danger="net_balance &lt; 0"
+                                           decoration-success="net_balance &gt; 0"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Contracts" name="contracts">
+                            <field name="contract_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="contract_type"/>
+                                    <field name="tenant_id"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="payment_state" widget="badge"
+                                           decoration-danger="payment_state == 'overdue'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- =========================== SEARCH =========================== -->
+    <record id="view_property_search" model="ir.ui.view">
+        <field name="name">real.estate.property.search</field>
+        <field name="model">real.estate.property</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Property"
+                       filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
+                <field name="city"/>
+                <field name="owner_id"/>
+                <field name="property_type_id"/>
+                <filter name="available" string="Available"
+                        domain="[('state', '=', 'available')]"/>
+                <filter name="rented" string="Rented"
+                        domain="[('state', '=', 'rented')]"/>
+                <filter name="for_rent" string="For Rent"
+                        domain="[('operation_type', 'in', ('rent', 'both'))]"/>
+                <filter name="for_sale" string="For Sale"
+                        domain="[('operation_type', 'in', ('sale', 'both'))]"/>
+                <separator/>
+                <filter name="has_overdue" string="With Overdue Rent"
+                        domain="[('total_overdue', '>', 0)]"/>
+                <group>
+                    <filter name="group_type" string="Type"
+                            context="{'group_by': 'property_type_id'}"/>
+                    <filter name="group_state" string="Status"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_city" string="City"
+                            context="{'group_by': 'city'}"/>
+                    <filter name="group_owner" string="Owner"
+                            context="{'group_by': 'owner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ===================== GRAPH & PIVOT ====================== -->
+    <record id="view_property_graph" model="ir.ui.view">
+        <field name="name">real.estate.property.graph</field>
+        <field name="model">real.estate.property</field>
+        <field name="arch" type="xml">
+            <graph string="Properties" type="bar">
+                <field name="property_type_id"/>
+                <field name="state"/>
+                <field name="net_balance" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_property_pivot" model="ir.ui.view">
+        <field name="name">real.estate.property.pivot</field>
+        <field name="model">real.estate.property</field>
+        <field name="arch" type="xml">
+            <pivot string="Properties">
+                <field name="property_type_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="total_collected" type="measure"/>
+                <field name="total_overdue" type="measure"/>
+                <field name="net_balance" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- =========================== ACTION =========================== -->
+    <record id="action_property" model="ir.actions.act_window">
+        <field name="name">Properties</field>
+        <field name="res_model">real.estate.property</field>
+        <field name="view_mode">kanban,list,form,graph,pivot</field>
+        <field name="search_view_id" ref="view_property_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Register your first property</p>
+            <p>Track properties, their contracts, maintenance and renovations.</p>
+        </field>
+    </record>
+
+</odoo>
