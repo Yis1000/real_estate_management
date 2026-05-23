@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_property_balance" model="ir.actions.report">
+        <field name="name">Property Balance</field>
+        <field name="model">real.estate.property</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">real_estate_management.report_property_balance</field>
+        <field name="report_file">real_estate_management.report_property_balance</field>
+        <field name="binding_model_id" ref="model_real_estate_property"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Balance - %s' % (object.code)</field>
+    </record>
+
+</odoo>

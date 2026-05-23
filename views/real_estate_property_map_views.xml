@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    OPTIONAL - Odoo Map view.
+    The <map> view type is provided by the Enterprise module 'web_map'.
+    It is NOT loaded by default so the module installs cleanly on Community.
+
+    To enable it:
+      1. Make sure 'web_map' is installed.
+      2. Uncomment this file in __manifest__.py ('data' list).
+      3. Add 'map' to the action_property view_mode (e.g. kanban,list,map,form).
+    The latitude/longitude fields already live on real.estate.property.
+-->
+<odoo>
+
+    <record id="view_property_map" model="ir.ui.view">
+        <field name="name">real.estate.property.map</field>
+        <field name="model">real.estate.property</field>
+        <field name="arch" type="xml">
+            <map latitude="latitude" longitude="longitude"
+                 routing="true" hide_name="false">
+                <field name="name" string="Property"/>
+                <field name="city" string="City"/>
+                <field name="rent_price" string="Rent"/>
+                <field name="state" string="Status"/>
+            </map>
+        </field>
+    </record>
+
+</odoo>

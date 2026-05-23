@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================ ROOT ============================ -->
+    <menuitem id="menu_real_estate_root"
+              name="Real Estate"
+              web_icon="real_estate_management,static/description/icon.png"
+              sequence="20"
+              groups="group_real_estate_user"/>
+
+    <!-- ========================== DASHBOARD ========================= -->
+    <menuitem id="menu_dashboard" name="Dashboard"
+              parent="menu_real_estate_root"
+              action="action_dashboard_main"
+              sequence="10"/>
+
+    <!-- ========================== PROPERTIES ======================== -->
+    <menuitem id="menu_properties" name="Properties"
+              parent="menu_real_estate_root" sequence="20"/>
+    <menuitem id="menu_property" name="Properties"
+              parent="menu_properties" action="action_property" sequence="10"/>
+    <menuitem id="menu_visit" name="Visits"
+              parent="menu_properties" action="action_visit" sequence="20"/>
+
+    <!-- ========================== CONTRACTS ========================= -->
+    <menuitem id="menu_contracts" name="Contracts"
+              parent="menu_real_estate_root" sequence="30"/>
+    <menuitem id="menu_contract" name="Contracts"
+              parent="menu_contracts" action="action_contract" sequence="10"/>
+    <menuitem id="menu_payment" name="Collections"
+              parent="menu_contracts" action="action_payment" sequence="20"/>
+    <menuitem id="menu_payment_overdue" name="Overdue Collections"
+              parent="menu_contracts" action="action_payment_overdue" sequence="30"/>
+    <menuitem id="menu_contract_overdue" name="Delinquent Contracts"
+              parent="menu_contracts" action="action_contract_overdue" sequence="40"/>
+
+    <!-- ========================= MAINTENANCE ======================== -->
+    <menuitem id="menu_maintenance" name="Maintenance"
+              parent="menu_real_estate_root" sequence="40"
+              action="action_maintenance"/>
+
+    <!-- ========================= RENOVATIONS ======================== -->
+    <menuitem id="menu_renovations" name="Renovations"
+              parent="menu_real_estate_root" sequence="50"/>
+    <menuitem id="menu_renovation" name="Projects"
+              parent="menu_renovations" action="action_renovation" sequence="10"/>
+    <menuitem id="menu_renovation_task" name="Tasks"
+              parent="menu_renovations" action="action_renovation_task" sequence="20"/>
+
+    <!-- ========================== DIRECTORY ========================= -->
+    <menuitem id="menu_directory" name="Directory"
+              parent="menu_real_estate_root" sequence="60"/>
+    <menuitem id="menu_partner_owner" name="Owners"
+              parent="menu_directory" action="action_partner_owner" sequence="10"/>
+    <menuitem id="menu_partner_tenant" name="Tenants"
+              parent="menu_directory" action="action_partner_tenant" sequence="20"/>
+    <menuitem id="menu_partner_provider" name="Maintenance Providers"
+              parent="menu_directory" action="action_partner_provider" sequence="30"/>
+    <menuitem id="menu_partner_employee" name="Agency Employees"
+              parent="menu_directory" action="action_partner_employee" sequence="40"/>
+
+    <!-- ======================== CONFIGURATION ======================= -->
+    <menuitem id="menu_configuration" name="Configuration"
+              parent="menu_real_estate_root" sequence="90"
+              groups="group_real_estate_manager"/>
+    <menuitem id="menu_property_type" name="Property Types"
+              parent="menu_configuration" action="action_property_type"
+              sequence="10"/>
+
+</odoo>

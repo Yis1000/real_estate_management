@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="seq_real_estate_property" model="ir.sequence">
+        <field name="name">Real Estate Property</field>
+        <field name="code">real.estate.property</field>
+        <field name="prefix">PROP/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_real_estate_contract" model="ir.sequence">
+        <field name="name">Real Estate Contract</field>
+        <field name="code">real.estate.contract</field>
+        <field name="prefix">CON/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_real_estate_maintenance" model="ir.sequence">
+        <field name="name">Real Estate Maintenance Ticket</field>
+        <field name="code">real.estate.maintenance</field>
+        <field name="prefix">TICK/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_real_estate_visit" model="ir.sequence">
+        <field name="name">Real Estate Visit</field>
+        <field name="code">real.estate.visit</field>
+        <field name="prefix">VIS/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+</odoo>
