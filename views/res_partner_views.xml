@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add Real Estate roles & smart buttons to the contact form -->
+    <record id="view_partner_form_real_estate" model="ir.ui.view">
+        <field name="name">res.partner.form.real.estate</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_owned_properties" type="object"
+                        class="oe_stat_button" icon="fa-home"
+                        invisible="owned_property_count == 0">
+                    <field name="owned_property_count" widget="statinfo"
+                           string="Properties"/>
+                </button>
+                <button name="action_view_tenant_contracts" type="object"
+                        class="oe_stat_button" icon="fa-file-text-o"
+                        invisible="tenant_contract_count == 0">
+                    <field name="tenant_contract_count" widget="statinfo"
+                           string="Contracts"/>
+                </button>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="Real Estate" name="real_estate">
+                    <group>
+                        <group string="Directory Role">
+                            <field name="is_property_owner"/>
+                            <field name="is_property_tenant"/>
+                            <field name="is_maintenance_provider"/>
+                            <field name="is_real_estate_employee"/>
+                        </group>
+                        <group string="Activity">
+                            <field name="real_estate_role"/>
+                            <field name="owned_property_count"/>
+                            <field name="tenant_contract_count"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Directory search: filter by real estate role -->
+    <record id="view_partner_search_real_estate" model="ir.ui.view">
+        <field name="name">res.partner.search.real.estate</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="re_owners" string="Owners"
+                        domain="[('is_property_owner', '=', True)]"/>
+                <filter name="re_tenants" string="Tenants"
+                        domain="[('is_property_tenant', '=', True)]"/>
+                <filter name="re_providers" string="Maintenance Providers"
+                        domain="[('is_maintenance_provider', '=', True)]"/>
+                <filter name="re_employees" string="Agency Employees"
+                        domain="[('is_real_estate_employee', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Directory actions -->
+    <record id="action_partner_owner" model="ir.actions.act_window">
+        <field name="name">Owners</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_property_owner', '=', True)]</field>
+        <field name="context">{'default_is_property_owner': True}</field>
+    </record>
+
+    <record id="action_partner_tenant" model="ir.actions.act_window">
+        <field name="name">Tenants</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_property_tenant', '=', True)]</field>
+        <field name="context">{'default_is_property_tenant': True}</field>
+    </record>
+
+    <record id="action_partner_provider" model="ir.actions.act_window">
+        <field name="name">Maintenance Providers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_maintenance_provider', '=', True)]</field>
+        <field name="context">{'default_is_maintenance_provider': True, 'default_is_company': True}</field>
+    </record>
+
+    <record id="action_partner_employee" model="ir.actions.act_window">
+        <field name="name">Agency Employees</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_real_estate_employee', '=', True)]</field>
+        <field name="context">{'default_is_real_estate_employee': True}</field>
+    </record>
+
+</odoo>
