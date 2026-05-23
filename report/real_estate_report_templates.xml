@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ===================================================================
+         CONTRACT REPORT
+         =================================================================== -->
+    <template id="report_contract_document">
+        <t t-call="web.external_layout">
+            <t t-set="o_money" t-value='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+            <div class="page">
+                <!-- Title -->
+                <h2 class="text-center mb-0 text-uppercase">
+                    <span t-if="doc.contract_type == 'rent'">Dwelling Rental Agreement</span>
+                    <span t-else="">Sale Agreement</span>
+                </h2>
+                <p t-if="doc.contract_type == 'rent'" class="text-center text-muted">
+                    <small>Orientative model under the Spanish Urban Lease Law (LAU 29/1994)</small>
+                </p>
+                <h5 class="text-center text-muted mt-1">
+                    Reference: <span t-field="doc.name"/>
+                </h5>
+
+                <!-- Date / place intro -->
+                <p class="text-end mt-4">
+                    In <strong><span t-field="doc.property_id.city"/></strong>,
+                    on <strong><span t-field="doc.date_signed"
+                                     t-options='{"widget": "date"}'/></strong>.
+                </p>
+
+                <!-- ============================================================ -->
+                <!--  RENTAL CONTRACT — full LAU model                              -->
+                <!-- ============================================================ -->
+                <div t-if="doc.contract_type == 'rent'">
+
+                    <h4 class="text-center mt-4">PARTIES</h4>
+                    <p>
+                        <strong>On one side, as Lessor</strong>, the individual
+                        <strong><span t-field="doc.owner_id"/></strong>,
+                        of legal age,
+                        <t t-if="doc.owner_id.street">
+                            domiciled at <span t-field="doc.owner_id.street"/>,
+                            <span t-field="doc.owner_id.city"/>
+                            <span t-field="doc.owner_id.zip"/>,
+                        </t>
+                        <t t-if="doc.owner_id.vat">
+                            with VAT/ID number
+                            <strong><span t-field="doc.owner_id.vat"/></strong>.
+                        </t>
+                        <t t-if="doc.owner_id.email or doc.owner_id.phone">
+                            Contact details for notifications:
+                            <t t-if="doc.owner_id.email">
+                                email <span t-field="doc.owner_id.email"/>
+                            </t>
+                            <t t-if="doc.owner_id.email and doc.owner_id.phone">,</t>
+                            <t t-if="doc.owner_id.phone">
+                                phone <span t-field="doc.owner_id.phone"/>
+                            </t>.
+                        </t>
+                    </p>
+                    <p>
+                        <strong>On the other side, as Lessee</strong>,
+                        <strong><span t-field="doc.tenant_id"/></strong>,
+                        of legal age,
+                        <t t-if="doc.tenant_id.vat">
+                            with VAT/ID number
+                            <strong><span t-field="doc.tenant_id.vat"/></strong>,
+                        </t>
+                        domiciled for notifications at the dwelling object of
+                        this lease.
+                        <t t-if="doc.tenant_id.email or doc.tenant_id.phone">
+                            Contact details:
+                            <t t-if="doc.tenant_id.email">
+                                email <span t-field="doc.tenant_id.email"/>
+                            </t>
+                            <t t-if="doc.tenant_id.email and doc.tenant_id.phone">,</t>
+                            <t t-if="doc.tenant_id.phone">
+                                phone <span t-field="doc.tenant_id.phone"/>
+                            </t>.
+                        </t>
+                    </p>
+                    <p>
+                        Both parties acknowledge having the legal capacity
+                        necessary to enter into this rental agreement.
+                    </p>
+
+                    <h4 class="text-center mt-4">EXPOSITION</h4>
+                    <p>
+                        That <strong><span t-field="doc.owner_id"/></strong>,
+                        the Lessor, is the owner of a dwelling located at
+                        <strong><span t-field="doc.property_id.street"/></strong>,
+                        <span t-field="doc.property_id.city"/>
+                        <span t-field="doc.property_id.zip"/>
+                        <t t-if="doc.property_id.cadastral_reference">
+                            , with Cadastral Reference
+                            <strong><span t-field="doc.property_id.cadastral_reference"/></strong>
+                        </t>
+                        <t t-if="doc.property_id.property_registry_ref">
+                            and registered at the Property Registry under
+                            <strong><span t-field="doc.property_id.property_registry_ref"/></strong>
+                        </t>
+                        <t t-if="doc.property_id.annexes">
+                            , together with the following annexes:
+                            <span t-field="doc.property_id.annexes"/>
+                        </t>.
+                        The dwelling is
+                        <t t-if="doc.property_id.is_furnished">furnished</t>
+                        <t t-else="">unfurnished</t>
+                        and has a living area of
+                        <span t-field="doc.property_id.living_area"/> m².
+                    </p>
+                    <p t-if="doc.property_id.has_energy_certificate">
+                        It is hereby stated that the dwelling possesses the
+                        mandatory energy efficiency certificate, in
+                        accordance with Royal Decree 235/2013, of 5 April.
+                    </p>
+                    <p>
+                        That <strong><span t-field="doc.tenant_id"/></strong>
+                        is interested in leasing the described dwelling for
+                        their permanent residence
+                        <t t-if="doc.occupants_description">
+                            (<span t-field="doc.occupants_description"/>)
+                        </t>.
+                    </p>
+                    <p>
+                        Both parties agree to comply with what is stipulated
+                        in this rental agreement, subject to the following:
+                    </p>
+
+                    <h4 class="text-center mt-4">CLAUSES</h4>
+
+                    <p>
+                        <strong>One. Regulation.</strong>
+                        This contract shall be governed by what is agreed
+                        herein and, in its absence, by the provisions of the
+                        Spanish Urban Lease Law (LAU 29/1994).
+                    </p>
+
+                    <p>
+                        <strong>Two. Object and delivery of possession.</strong>
+                        The content of this contract is the lease of a property
+                        for permanent housing
+                        <t t-if="doc.occupants_description">
+                            for <span t-field="doc.occupants_description"/>
+                        </t>.
+                        The Lessor hereby delivers, with the signing of this
+                        contract, the keys to the leased dwelling and its
+                        possession, together with the energy efficiency
+                        certificate. The Lessee receives the dwelling with full
+                        knowledge of its conditions and submits to the
+                        horizontal property regime, undertaking to:
+                    </p>
+                    <ul>
+                        <li>Use the dwelling with due diligence and for its
+                            intended purpose.</li>
+                        <li>Preserve it in the conditions in which it was
+                            delivered, save for ordinary wear and tear and
+                            unavoidable causes.</li>
+                        <li>Not carry out industrial activities, or activities
+                            that are annoying, unhealthy, harmful or dangerous.</li>
+                    </ul>
+
+                    <p>
+                        <strong>Three. Term.</strong>
+                        The term of this rental agreement is one (1) year, to
+                        be counted from
+                        <strong><span t-field="doc.date_start"
+                                      t-options='{"widget": "date"}'/></strong>.
+                        The lease shall be automatically extended for annual
+                        periods up to a maximum term of five (5) years, unless
+                        the Lessee notifies the Lessor in writing of their
+                        intention not to renew with at least thirty (30) days
+                        notice prior to the end of the agreed term or any of
+                        its annual extensions.
+                    </p>
+
+                    <p>
+                        <strong>Four. Lessor's right to recover the dwelling.</strong>
+                        The Lessor states that the obligatory extension of this
+                        contract shall not apply if, after the first year has
+                        elapsed, they communicate the need to occupy the leased
+                        dwelling before five years have passed, for permanent
+                        housing for themselves, first-degree relatives by
+                        consanguinity or adoption, or for their spouse in cases
+                        of final judgment of separation, divorce or matrimonial
+                        nullity. Such communication shall be made in writing
+                        with two (2) months notice.
+                    </p>
+
+                    <p>
+                        <strong>Five. Lessee's withdrawal.</strong>
+                        The Lessee may withdraw from the contract once six (6)
+                        months have elapsed since its signing, with at least
+                        thirty (30) days written notice. In such case, the
+                        Lessee shall compensate the Lessor with an amount
+                        equivalent to one monthly instalment of the rent in
+                        force for each year remaining, or its proportional
+                        part if the period is less than one year.
+                    </p>
+
+                    <p>
+                        <strong>Six. Tacit extension.</strong>
+                        Once five (5) years of duration of the contract have
+                        elapsed at minimum, if neither the Lessee notifies the
+                        Lessor of their intention not to renew with two (2)
+                        months notice, nor the Lessor notifies the Lessee with
+                        four (4) months notice, the contract shall be
+                        obligatorily extended for annual periods up to a
+                        maximum of three (3) additional years.
+                    </p>
+
+                    <p>
+                        <strong>Seven. Rent.</strong>
+                        The monthly rent is set at
+                        <strong><span t-field="doc.rent_amount" t-options="o_money"/></strong>.
+                        It shall be paid monthly in advance, within the first
+                        seven (7) days of each month, by cash deposit or bank
+                        transfer in favour of the Lessor
+                        <t t-if="doc.landlord_iban">
+                            to the account
+                            <strong><span t-field="doc.landlord_iban"/></strong>
+                        </t>.
+                        Payment shall be sufficiently evidenced by the
+                        corresponding deposit or transfer receipt or, if paid
+                        in cash, by the receipt issued by the Lessor.
+                    </p>
+
+                    <p>
+                        <strong>Eight. Rent update.</strong>
+                        The rent may only be updated on the date on which each
+                        year of the contract's validity is fulfilled, by
+                        reference to the annual variation of the
+                        Competitiveness Guarantee Index, capped at the
+                        variation of the Consumer Price Index (CPI). The
+                        updated rent shall be enforceable from the month
+                        following written notification to the Lessee.
+                    </p>
+
+                    <p>
+                        <strong>Nine. Expenses and services.</strong>
+                        The rent price includes the general expenses of the
+                        property, services, taxes and charges that are not
+                        individually attributable. Individual utility costs
+                        (electricity, water, gas, internet) shall be borne by
+                        the Lessee.
+                    </p>
+
+                    <p>
+                        <strong>Ten. Security deposit.</strong>
+                        At the time of signing this contract, the Lessee
+                        delivers to the Lessor the amount of
+                        <strong><span t-field="doc.deposit" t-options="o_money"/></strong>,
+                        equivalent to one (1) monthly instalment of the rent,
+                        as legal deposit. The deposit guarantees the Lessee's
+                        legal and contractual obligations and may not in any
+                        case be applied to the payment of rent or any other
+                        expense. The return of the deposit shall be made at
+                        the time of resolution of the contract, with legal
+                        interest for delay if such return is delayed by more
+                        than one month.
+                    </p>
+
+                    <p>
+                        <strong>Eleven. Conservation of the dwelling.</strong>
+                        The Lessor undertakes to carry out, without the right
+                        to raise the rent for this reason, the repairs
+                        necessary to keep the dwelling in conditions of
+                        habitability, except those that result from
+                        deterioration attributable to the Lessee, their
+                        dependents or visitors, by action, omission or
+                        negligence. After the first five (5) years, the Lessor
+                        may carry out improvement works, which shall entitle
+                        them to raise the rent with the limitations provided
+                        by the LAU.
+                    </p>
+
+                    <p>
+                        <strong>Twelve. Lessee's works.</strong>
+                        The Lessee may not carry out works that modify the
+                        configuration of the dwelling or any of its
+                        accessories without the Lessor's written consent.
+                        Authorised works shall be carried out at the Lessee's
+                        expense and, at the end of the contract, shall remain
+                        for the benefit of the property without generating any
+                        right to compensation. Contravention of this clause
+                        shall be cause for resolution of the contract.
+                    </p>
+
+                    <p>
+                        <strong>Thirteen. Assignment and sublet.</strong>
+                        The contract may not be assigned or sublet by the
+                        Lessee without the written consent of the Lessor. In
+                        any case, the sublease shall terminate when the
+                        Lessee's contract does, and its price may not exceed
+                        that established for the lease.
+                    </p>
+
+                    <p>
+                        <strong>Fourteen. Resolution of the contract.</strong>
+                        Breach of any of the clauses of this contract and, in
+                        its absence, of the regulations applicable, shall be
+                        cause for resolution of the contract for either party.
+                    </p>
+
+                    <p>
+                        <strong>Fifteen. Conflict resolution.</strong>
+                        For the resolution of any conflict that may arise from
+                        the interpretation of this contract, the parties
+                        submit to the ordinary jurisdiction.
+                    </p>
+
+                </div>
+
+                <!-- ============================================================ -->
+                <!--  SALE CONTRACT — shorter set of clauses                        -->
+                <!-- ============================================================ -->
+                <div t-else="">
+
+                    <h4 class="mt-4">BETWEEN</h4>
+                    <div class="row">
+                        <div class="col-6">
+                            <p class="mb-1"><strong>SELLER</strong></p>
+                            <p class="mb-0">
+                                <span t-field="doc.owner_id"/><br/>
+                                <t t-if="doc.owner_id.vat">
+                                    VAT/ID: <span t-field="doc.owner_id.vat"/><br/>
+                                </t>
+                                <t t-if="doc.owner_id.street">
+                                    <span t-field="doc.owner_id.street"/>,
+                                    <span t-field="doc.owner_id.city"/>
+                                    <span t-field="doc.owner_id.zip"/>
+                                </t>
+                            </p>
+                        </div>
+                        <div class="col-6">
+                            <p class="mb-1"><strong>BUYER</strong></p>
+                            <p class="mb-0">
+                                <span t-field="doc.tenant_id"/><br/>
+                                <t t-if="doc.tenant_id.vat">
+                                    VAT/ID: <span t-field="doc.tenant_id.vat"/><br/>
+                                </t>
+                                <t t-if="doc.tenant_id.street">
+                                    <span t-field="doc.tenant_id.street"/>,
+                                    <span t-field="doc.tenant_id.city"/>
+                                    <span t-field="doc.tenant_id.zip"/>
+                                </t>
+                            </p>
+                        </div>
+                    </div>
+
+                    <h4 class="mt-3">PROPERTY</h4>
+                    <table class="table table-sm table-bordered">
+                        <tr>
+                            <td style="width:25%"><strong>Reference</strong></td>
+                            <td><span t-field="doc.property_id.code"/></td>
+                            <td style="width:25%"><strong>Name</strong></td>
+                            <td><span t-field="doc.property_id.name"/></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Address</strong></td>
+                            <td colspan="3">
+                                <span t-field="doc.property_id.street"/>,
+                                <span t-field="doc.property_id.city"/>
+                                <span t-field="doc.property_id.zip"/>
+                            </td>
+                        </tr>
+                        <tr t-if="doc.property_id.cadastral_reference">
+                            <td><strong>Cadastral Ref.</strong></td>
+                            <td colspan="3">
+                                <span t-field="doc.property_id.cadastral_reference"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <h4 class="mt-4">CLAUSES</h4>
+                    <p>
+                        <strong>One. Object.</strong>
+                        The Seller transfers ownership of the property
+                        described above to the Buyer, free of charges and
+                        encumbrances, for the price stated below.
+                    </p>
+                    <p>
+                        <strong>Two. Price.</strong>
+                        The agreed sale price is
+                        <strong><span t-field="doc.sale_amount" t-options="o_money"/></strong>,
+                        to be paid in full at the signing of this agreement.
+                    </p>
+                    <p>
+                        <strong>Three. Delivery.</strong>
+                        The transfer of ownership and delivery of keys take
+                        effect on
+                        <strong><span t-field="doc.date_start"
+                                      t-options='{"widget": "date"}'/></strong>.
+                    </p>
+                    <p t-if="doc.deposit">
+                        <strong>Four. Down payment.</strong>
+                        The Buyer has delivered
+                        <strong><span t-field="doc.deposit" t-options="o_money"/></strong>
+                        as a down payment, to be deducted from the total price.
+                    </p>
+                    <p>
+                        <strong>
+                            <t t-out="doc.deposit and 'Five.' or 'Four.'"/> Warranties.
+                        </strong>
+                        The Seller warrants peaceful possession and absence
+                        of encumbrances. The Buyer accepts the property in
+                        its current state, having had the opportunity to
+                        inspect it.
+                    </p>
+                    <p>
+                        <strong>
+                            <t t-out="doc.deposit and 'Six.' or 'Five.'"/> Jurisdiction.
+                        </strong>
+                        For the resolution of any conflict arising from this
+                        agreement, the parties submit to the ordinary
+                        jurisdiction.
+                    </p>
+                </div>
+
+                <!-- Payment schedule for rentals -->
+                <div t-if="doc.contract_type == 'rent' and doc.payment_ids" class="mt-4">
+                    <h4>PAYMENT SCHEDULE</h4>
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Description</th>
+                                <th>Due Date</th>
+                                <th class="text-end">Amount</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="doc.payment_ids" t-as="p">
+                                <td t-out="p_index + 1"/>
+                                <td><span t-field="p.description"/></td>
+                                <td><span t-field="p.due_date"/></td>
+                                <td class="text-end">
+                                    <span t-field="p.amount"
+                                          t-options='{"widget": "monetary", "display_currency": p.currency_id}'/>
+                                </td>
+                                <td class="text-center">
+                                    <span t-field="p.state"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Free-text terms -->
+                <div t-if="doc.note" class="mt-4">
+                    <h4>ADDITIONAL TERMS</h4>
+                    <div t-field="doc.note"/>
+                </div>
+
+                <!-- Acceptance -->
+                <p class="mt-4">
+                    Both parties, having read this agreement and agreeing with
+                    its content, sign it in duplicate at the place and date first
+                    above written.
+                </p>
+
+                <!-- Signatures -->
+                <div class="row mt-5 pt-4">
+                    <div class="col-6 text-center">
+                        <div style="border-top:1px solid #000; padding-top:6px;">
+                            <strong>
+                                <span t-if="doc.contract_type == 'rent'">THE LESSOR</span>
+                                <span t-else="">THE SELLER</span>
+                            </strong><br/>
+                            <span t-field="doc.owner_id"/>
+                        </div>
+                    </div>
+                    <div class="col-6 text-center">
+                        <div style="border-top:1px solid #000; padding-top:6px;">
+                            <strong>
+                                <span t-if="doc.contract_type == 'rent'">THE LESSEE</span>
+                                <span t-else="">THE BUYER</span>
+                            </strong><br/>
+                            <span t-field="doc.tenant_id"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_contract">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="real_estate_management.report_contract_document"/>
+            </t>
+        </t>
+    </template>
+
+    <!-- ===================================================================
+         PROPERTY FINANCIAL BALANCE REPORT
+         =================================================================== -->
+    <template id="report_property_balance_document">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <h2 class="text-center">Property Financial Balance</h2>
+                <h4 class="text-center text-muted">
+                    [<span t-field="doc.code"/>] <span t-field="doc.name"/>
+                </h4>
+
+                <table class="table table-sm mt-4">
+                    <tr>
+                        <td><strong>Type</strong></td>
+                        <td t-field="doc.property_type_id"/>
+                        <td><strong>Owner</strong></td>
+                        <td t-field="doc.owner_id"/>
+                    </tr>
+                    <tr>
+                        <td><strong>Status</strong></td>
+                        <td t-field="doc.state"/>
+                        <td><strong>City</strong></td>
+                        <td t-field="doc.city"/>
+                    </tr>
+                </table>
+
+                <h4 class="mt-4">Income &amp; Costs</h4>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Concept</th>
+                            <th class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Collected (income)</td>
+                            <td class="text-end">
+                                <span t-field="doc.total_collected"
+                                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                            </td>
+                        </tr>
+                        <tr class="text-warning">
+                            <td>Pending Collections</td>
+                            <td class="text-end">
+                                <span t-field="doc.total_pending"
+                                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                            </td>
+                        </tr>
+                        <tr class="text-danger">
+                            <td>Overdue Amount</td>
+                            <td class="text-end">
+                                <span t-field="doc.total_overdue"
+                                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Maintenance Cost</td>
+                            <td class="text-end">
+                                - <span t-field="doc.maintenance_cost"
+                                        t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Renovation Cost</td>
+                            <td class="text-end">
+                                - <span t-field="doc.renovation_cost"
+                                        t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>NET BALANCE</th>
+                            <th class="text-end">
+                                <span t-field="doc.net_balance"
+                                      t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <h4 class="mt-4">Contracts</h4>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Contract</th>
+                            <th>Tenant / Buyer</th>
+                            <th>Type</th>
+                            <th class="text-end">Collected</th>
+                            <th class="text-end">Overdue</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="doc.contract_ids" t-as="contract">
+                            <td t-field="contract.name"/>
+                            <td t-field="contract.tenant_id"/>
+                            <td t-field="contract.contract_type"/>
+                            <td class="text-end">
+                                <span t-field="contract.amount_collected"
+                                      t-options='{"widget": "monetary", "display_currency": contract.currency_id}'/>
+                            </td>
+                            <td class="text-end">
+                                <span t-field="contract.amount_overdue"
+                                      t-options='{"widget": "monetary", "display_currency": contract.currency_id}'/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_property_balance">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="real_estate_management.report_property_balance_document"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>
