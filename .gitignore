@@ -40,3 +40,6 @@ desktop.ini
 # Docker local state
 .env
 pgdata/
+
+# Local asset staging, not part of the module
+IMAGENES PARA ODOOAPPS/
