@@ -37,6 +37,11 @@ End-to-end management of a real estate portfolio:
         # Master data
         'data/ir_sequence_data.xml',
         'data/ir_cron_data.xml',
+        # Reports (must load before the views: the contract form references
+        # action_report_contract through %(...)d)
+        'report/real_estate_report_templates.xml',
+        'report/real_estate_contract_report.xml',
+        'report/real_estate_balance_report.xml',
         # Views
         'views/real_estate_property_type_views.xml',
         'views/real_estate_property_views.xml',
@@ -48,10 +53,6 @@ End-to-end management of a real estate portfolio:
         'views/real_estate_visit_views.xml',
         'views/real_estate_dashboard_views.xml',
         # 'views/real_estate_property_map_views.xml',  # Requires 'web_map' (Enterprise)
-        # Reports
-        'report/real_estate_report_templates.xml',
-        'report/real_estate_contract_report.xml',
-        'report/real_estate_balance_report.xml',
         # Menus (must load last: references actions + reports)
         'views/real_estate_menus.xml',
     ],
