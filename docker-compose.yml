@@ -1,0 +1,55 @@
+# Local development stack for the real_estate_management repository.
+#
+# The repository root is mounted as /mnt/extra-addons, so every module folder
+# in this repo (real_estate_management_pro, real_estate_account, ...) is picked
+# up directly by Odoo without copying anything.
+#
+#   docker compose up -d
+#   docker compose exec odoo odoo -d test_re -i real_estate_account \
+#       --test-enable --test-tags /real_estate_account --stop-after-init
+#
+services:
+  odoo:
+    image: odoo:18
+    container_name: re-odoo18
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "10088:8069"   # web
+      - "20088:8072"   # longpolling / websocket
+    volumes:
+      - re-odoo18-web-data:/var/lib/odoo
+      - ./.docker/odoo.conf:/etc/odoo/odoo.conf:ro
+      - .:/mnt/extra-addons
+      # real_estate_account lives in its own repository, one level up
+      - ../real_estate_account:/mnt/extra-addons-account
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+    command: odoo -c /etc/odoo/odoo.conf
+    restart: unless-stopped
+
+  db:
+    image: postgres:16
+    container_name: re-odoo18-db
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    ports:
+      - "54388:5432"
+    volumes:
+      - re-odoo18-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  re-odoo18-web-data:
+  re-odoo18-db-data:
