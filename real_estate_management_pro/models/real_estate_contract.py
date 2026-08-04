@@ -187,11 +187,15 @@ class RealEstateContract(models.Model):
                 raise UserError(_(
                     'To generate the rent schedule set the start date, '
                     'end date and the monthly rent.'))
-            cursor = contract.date_start
+            # Do not name this local "cursor": odoo.tools.translate._get_cr
+            # probes the caller frame for a local of that name and feeds it to
+            # Environment(), which makes every _() call in this method crash
+            # outside an HTTP request (tests, cron, XML-RPC).
+            date_cursor = contract.date_start
             index = 1
-            while cursor <= contract.date_end:
+            while date_cursor <= contract.date_end:
                 day = min(contract.payment_day, 28)
-                due = cursor.replace(day=day)
+                due = date_cursor.replace(day=day)
                 if due < contract.date_start:
                     due = contract.date_start
                 Payment.create({
@@ -200,7 +204,7 @@ class RealEstateContract(models.Model):
                     'amount': contract.rent_amount,
                     'description': _('Rent month %s', index),
                 })
-                cursor += relativedelta(months=1)
+                date_cursor += relativedelta(months=1)
                 index += 1
 
     # ------------------------------------------------------------------
