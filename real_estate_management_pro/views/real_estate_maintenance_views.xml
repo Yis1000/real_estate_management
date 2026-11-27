@@ -14,7 +14,7 @@
                             <field name="title"/>
                         </strong>
                         <div class="text-muted"><field name="name"/></div>
-                        <div><i class="fa fa-home me-1" title="Property"/><field name="property_id"/></div>
+                        <div><i class="oi me-1" data-icon="home" title="Property"/><field name="property_id"/></div>
                         <div><field name="maintenance_type"/></div>
                         <footer>
                             <field name="priority" widget="priority"/>

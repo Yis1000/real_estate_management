@@ -41,7 +41,7 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_tasks" type="object"
-                                class="oe_stat_button" icon="fa-tasks">
+                                class="oe_stat_button" icon="checklist">
                             <field name="task_count" widget="statinfo" string="Tasks"/>
                         </button>
                     </div>
@@ -110,7 +110,7 @@
                         <strong class="o_kanban_record_title">
                             <field name="name"/>
                         </strong>
-                        <div><i class="fa fa-home me-1" title="Property"/><field name="property_id"/></div>
+                        <div><i class="oi me-1" data-icon="home" title="Property"/><field name="property_id"/></div>
                         <div class="text-muted"><field name="renovation_id"/></div>
                         <div><field name="task_type"/></div>
                         <footer>

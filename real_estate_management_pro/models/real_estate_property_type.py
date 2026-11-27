@@ -18,9 +18,10 @@ class RealEstatePropertyType(models.Model):
     property_count = fields.Integer(
         string='Property Count', compute='_compute_property_count')
 
-    _sql_constraints = [
-        ('name_uniq', 'UNIQUE(name)', 'A property type with this name already exists.'),
-    ]
+    _name_uniq = models.Constraint(
+        'UNIQUE(name)',
+        "A property type with this name already exists.",
+    )
 
     @api.depends('property_ids')
     def _compute_property_count(self):

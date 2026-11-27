@@ -1,0 +1,20 @@
+id,name,model_id,group_id/id,operation,domain
+access_property_type_user,property.type.user,real.estate.property.type,real_estate_management_pro.group_real_estate_user,r,
+access_property_type_manager,property.type.manager,real.estate.property.type,real_estate_management_pro.group_real_estate_manager,crud,
+access_property_user,property.user,real.estate.property,real_estate_management_pro.group_real_estate_user,cru,
+access_property_manager,property.manager,real.estate.property,real_estate_management_pro.group_real_estate_manager,crud,
+rule_property_company,Property: multi-company,real.estate.property,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+access_contract_user,contract.user,real.estate.contract,real_estate_management_pro.group_real_estate_user,cru,
+access_contract_manager,contract.manager,real.estate.contract,real_estate_management_pro.group_real_estate_manager,crud,
+rule_contract_company,Contract: multi-company,real.estate.contract,,crud,"['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]"
+access_payment_user,payment.user,real.estate.payment,real_estate_management_pro.group_real_estate_user,cru,
+access_payment_manager,payment.manager,real.estate.payment,real_estate_management_pro.group_real_estate_manager,crud,
+access_maintenance_user,maintenance.user,real.estate.maintenance,real_estate_management_pro.group_real_estate_user,cru,
+access_maintenance_manager,maintenance.manager,real.estate.maintenance,real_estate_management_pro.group_real_estate_manager,crud,
+access_renovation_user,renovation.user,real.estate.renovation,real_estate_management_pro.group_real_estate_user,cru,
+access_renovation_manager,renovation.manager,real.estate.renovation,real_estate_management_pro.group_real_estate_manager,crud,
+access_renovation_task_user,renovation.task.user,real.estate.renovation.task,real_estate_management_pro.group_real_estate_user,crud,
+access_dashboard_user,dashboard.user,real.estate.dashboard,real_estate_management_pro.group_real_estate_user,cru,
+access_dashboard_manager,dashboard.manager,real.estate.dashboard,real_estate_management_pro.group_real_estate_manager,crud,
+access_image_user,image.user,real.estate.image,real_estate_management_pro.group_real_estate_user,crud,
+access_visit_user,visit.user,real.estate.visit,real_estate_management_pro.group_real_estate_user,crud,

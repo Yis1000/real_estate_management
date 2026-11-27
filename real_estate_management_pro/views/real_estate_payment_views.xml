@@ -22,7 +22,7 @@
                        decoration-success="state == 'paid'"/>
                 <field name="currency_id" column_invisible="1"/>
                 <button name="action_register_payment" type="object"
-                        string="Register Payment" icon="fa-check"
+                        string="Register Payment" icon="check"
                         invisible="state in ('paid', 'cancelled')"/>
             </list>
         </field>

@@ -87,21 +87,21 @@
                             </div>
 
                             <div class="text-muted small mt-1">
-                                <i class="fa fa-tag me-1" title="Type"/>
+                                <i class="oi me-1" data-icon="label" title="Type"/>
                                 <field name="property_type_id"/>
                             </div>
 
                             <div class="d-flex gap-3 mt-2 text-muted small">
                                 <span t-if="record.bedrooms.raw_value">
-                                    <i class="fa fa-bed me-1" title="Bedrooms"/>
+                                    <i class="oi me-1" data-icon="bed" title="Bedrooms"/>
                                     <field name="bedrooms"/>
                                 </span>
                                 <span t-if="record.bathrooms.raw_value">
-                                    <i class="fa fa-bath me-1" title="Bathrooms"/>
+                                    <i class="oi me-1" data-icon="bathtub" title="Bathrooms"/>
                                     <field name="bathrooms"/>
                                 </span>
                                 <span t-if="record.living_area.raw_value">
-                                    <i class="fa fa-arrows-alt me-1" title="Area"/>
+                                    <i class="oi me-1" data-icon="open_with" title="Area"/>
                                     <field name="living_area"/> m²
                                 </span>
                             </div>
@@ -113,13 +113,13 @@
 
                             <div t-if="record.city.raw_value"
                                  class="text-muted small mt-2 d-flex align-items-center">
-                                <i class="fa fa-map-marker me-1" title="Location"/>
+                                <i class="oi me-1" data-icon="location_on" title="Location"/>
                                 <field name="city"/>
                             </div>
 
                             <div t-if="record.total_overdue.raw_value &gt; 0"
                                  class="text-danger fw-bold small mt-1">
-                                <i class="fa fa-exclamation-triangle me-1" title="Overdue"/>
+                                <i class="oi me-1" data-icon="warning" title="Overdue"/>
                                 Overdue: <field name="total_overdue" widget="monetary"/>
                             </div>
                         </div>
@@ -148,19 +148,19 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_contracts" type="object"
-                                class="oe_stat_button" icon="fa-file-text-o">
+                                class="oe_stat_button" icon="article">
                             <field name="contract_count" widget="statinfo" string="Contracts"/>
                         </button>
                         <button name="action_view_maintenance" type="object"
-                                class="oe_stat_button" icon="fa-wrench">
+                                class="oe_stat_button" icon="build">
                             <field name="maintenance_count" widget="statinfo" string="Tickets"/>
                         </button>
                         <button name="action_view_renovations" type="object"
-                                class="oe_stat_button" icon="fa-paint-brush">
+                                class="oe_stat_button" icon="brush">
                             <field name="renovation_count" widget="statinfo" string="Renovations"/>
                         </button>
                         <button name="action_view_visits" type="object"
-                                class="oe_stat_button" icon="fa-calendar">
+                                class="oe_stat_button" icon="calendar_today" icon_class="oi-filled">
                             <field name="visit_count" widget="statinfo" string="Visits"/>
                         </button>
                     </div>

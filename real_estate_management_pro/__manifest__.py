@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Real Estate Management',
-    'version': '19.0.1.0.0',
+    'version': '20.0.1.0.0',
     'category': 'Real Estate/Real Estate',
     'live_test_url': 'https://youtu.be/8Gp2J6WrP1c',
     'images': ['static/description/banner.png'],
@@ -33,7 +33,6 @@ End-to-end management of a real estate portfolio:
     'data': [
         # Security
         'security/real_estate_security.xml',
-        'security/ir.model.access.csv',
         # Master data
         'data/ir_sequence_data.xml',
         'data/ir_cron_data.xml',
@@ -55,6 +54,7 @@ End-to-end management of a real estate portfolio:
         # 'views/real_estate_property_map_views.xml',  # Requires 'web_map' (Enterprise)
         # Menus (must load last: references actions + reports)
         'views/real_estate_menus.xml',
+        'security/ir.access.csv',
     ],
     'installable': True,
     'application': True,

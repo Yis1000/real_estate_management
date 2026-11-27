@@ -51,7 +51,7 @@
                             </div>
                             <div t-if="record.is_overdue.raw_value"
                                  class="text-danger fw-bold">
-                                <i class="fa fa-exclamation-triangle me-1" title="Overdue"/>
+                                <i class="oi me-1" data-icon="warning" title="Overdue"/>
                                 Overdue: <field name="amount_overdue" widget="monetary"/>
                             </div>
                             <footer>
@@ -83,7 +83,7 @@
                             string="Reset to Draft"
                             invisible="state not in ('cancelled', 'expired')"/>
                     <button name="%(action_report_contract)d" type="action"
-                            string="Print Contract" icon="fa-print"/>
+                            string="Print Contract" icon="print"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,running,done"/>
                 </header>
@@ -91,7 +91,7 @@
                     <!-- RED DELINQUENCY ALERT BANNER -->
                     <div class="alert alert-danger" role="alert"
                          invisible="not is_overdue">
-                        <i class="fa fa-exclamation-triangle me-2" title="Alert"/>
+                        <i class="oi me-2" data-icon="warning" title="Alert"/>
                         <strong>Delinquency alert:</strong>
                         this tenant has <field name="overdue_count" class="oe_inline"/>
                         overdue collection(s) totalling
@@ -99,7 +99,7 @@
                     </div>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_payments" type="object"
-                                class="oe_stat_button" icon="fa-money">
+                                class="oe_stat_button" icon="payments">
                             <field name="payment_count" widget="statinfo" string="Collections"/>
                         </button>
                     </div>
@@ -156,7 +156,7 @@
                                            decoration-success="state == 'paid'"/>
                                     <field name="currency_id" column_invisible="1"/>
                                     <button name="action_register_payment" type="object"
-                                            string="Register Payment" icon="fa-check"
+                                            string="Register Payment" icon="check"
                                             invisible="state in ('paid', 'cancelled')"/>
                                 </list>
                             </field>
